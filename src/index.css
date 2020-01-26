@@ -56,3 +56,6 @@ button{
   flex-direction: column;
   text-align: center;
 }
+.search-icon{
+  font-size: 25px;
+}
