@@ -3,32 +3,24 @@ import api from './services/api';
 
 const Users = () => {
   const [usersList, setUsersList] = useState([])
-  const [searchTerm, setSearchTerm] = useState("")
-
-
-  const handleChange = event => {
-    setSearchTerm(event.target.value)
-    event.preventDefault();
-    console.log(searchTerm)
-    
-  }
+  const [filteredList, setFilteredList] = useState([]);
 
   useEffect(() => {
     const loadData = async () => {
       const getUsers = await api.get('users')
       setUsersList(getUsers.data)
+      setFilteredList(getUsers.data);
+
     }
     loadData()
 
   }, []);
 
- useEffect(() => {
-    const results = usersList.filter(person =>
-      person.toLowerCase().includes(usersList)
-      
-    );
-    setSearchTerm(results);
-  }, [])
+  const handleChange = (e) => {
+    const inputValue = e.target.value.toLowerCase();
+    const filtered = usersList.filter(user => user.name.toLowerCase().includes(inputValue));
+    setFilteredList(filtered);
+  }
 
   return (
     <div className="App">
@@ -37,15 +29,13 @@ const Users = () => {
         <form >
           <input type='text'
             placeholder='Pesquisar...'
-            value={searchTerm}
             onChange={handleChange}
-            
           />
-          <i className="fa fa-search search-icon" style={{marginTop: 0}} ></i>
+          <i className="fa fa-search search-icon" ></i>
         </form>
       </div>
       <div  className='main-info-cards'>
-        {usersList.map(users =>
+        {filteredList.map(users =>
           <div key={users.id} className='info-cards'>
             <h3 >Dados do cliente</h3>
             <p >Nome: {users.name}</p>
